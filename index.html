@@ -1,110 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta property=’og:image’ content='https://img.freepik.com/premium-psd/horizontal-website-banne_451189-110.jpg’/>
-
-    <meta property=’og:title’ content='SMARTPHONE DOCTOR'/>
-
-  <meta property=’og:description’ content='Sales and Service with low budget bigg products'/>
-
-  <meta property=’og:url’ content='https://devsaheerhost.github.io/smartphone_doctor/'/>
-
-  <meta property='og:image:width' content='1200' />
-<meta property='og:image:height' content='627' />
-
-  <meta property="og:type" content='website'/>
-
-  <link rel="shortcut icon" href="https://ecwid-us-vir-linkup-images.s3.amazonaws.com/linkup/96306263/HGW59J9-600x600.webp" type="image/x-icon" />
-  <title>SmartPhoneDoctor</title>
-  
-  <!-- HTML -->
-  
-
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="style.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;400;500&display=swap');
-  </style>
+  <title>Shop Service Manager</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
-   <div class="loading-container">
+
+<header>
+  <h2 id="shopNameTitle">Service Management</h2>
+</header>
+
+
+<main class="page home" id="home">
+  <section class="cards">
+  <div class="card">
+    <h3 id="totalJobs">0</h3>
+    <p>Total Jobs</p>
+  </div>
+
+  <div class="card">
+    <h3 id="totalRevenue">₹0</h3>
+    <p>Revenue</p>
+  </div>
+
+  <div class="card">
+    <h3 id="totalProfit">₹0</h3>
+    <p>Profit</p>
+  </div>
+</section>
+
+
+
+<section class="filters">
+
+  <!-- Date -->
+  <input type="date" id="fromDate">
+  <input type="date" id="toDate">
+
+  <!-- Staff -->
+  <select id="staffFilter">
+    <option value="all">All Staff</option>
+  </select>
+
+  <!-- Search -->
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search device / complaint / SN"
+  >
+
+</section>
+
+
+<section>
+  <h3>Job List</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>SN</th>
+        <th>Device</th>
+        <th>Staff</th>
+        <th>Amount</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="jobTable"></tbody>
+  </table>
+</section>
+
+<section class="staffPerformance">
+
+  <h3>Staff Performance</h3>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Staff</th>
+        <th>Jobs</th>
+        <th>Revenue</th>
+        <th>Spare Cost</th>
+        <th>Profit</th>
+      </tr>
+    </thead>
+
+    <tbody id="staffTable"></tbody>
+
+  </table>
+
+</section>
+
+</main>
+
+
+
+<main class="page login hidden" id="login">
+  <section id="loginScreen">
+
+  <h2>Staff Login</h2>
+
+  <input 
+    id="staffNameInput"
+    placeholder="Enter staff name"
+  >
+
+  <button onclick="staffLogin()">
+    Continue
+  </button>
+
+</section>
+
+</main>
+
+
+<div id="appScreen" style="display:none">
+  <!-- dashboard + form + table -->
+  hello
 </div>
 
 
-<!-- load end -->
-  <header>
-    <div class="container">
-      <div class="img-circle-card">
-        <img src="https://ecwid-us-vir-linkup-images.s3.amazonaws.com/linkup/96306263/HGW59J9-600x600.webp" alt="dp">
-      </div>
-      <div class="text-container">
-      <h1>Suhailmon664@gmail.com</h1>
-      <p for="">High-quality iPhone's at a better price</p>
-        <span>
-          <div class="image-icon-div">
-          <a href="https://www.instagram.com/_________sk___________64?igshid=OGQ5ZDc2ODk2ZA%3D%3D&utm_source=qr">
-          <img src="https://res.cloudinary.com/saheerbabu/image/upload/v1702739228/webDevelopment/smartphoneDoctor/images/instagram50.png" alt=""></a>
-          </div>
-          <div class="image-icon-div">
-          <a href="https://wa.me/8943808664">
-          <img src="https://res.cloudinary.com/saheerbabu/image/upload/v1702739228/webDevelopment/smartphoneDoctor/images/whatsapp50.png" alt=""></a>
-          </div>
-        </span>
-      </div>
-      
-    </div>
-  </header>
+
+
+
+<main class="page create hidden" id="create">
+  <section class="form">
+  <h3>New Job</h3>
+
+  <input id="device" placeholder="Device Model">
+  <input id="complaint" placeholder="Complaint">
+  <input id="spareName" placeholder="Spare Name">
+  <input id="spareCost" type="number" placeholder="Spare Cost">
+  <input id="serviceCharge" type="number" placeholder="Service Charge">
+  <input id="staff" placeholder="Staff Name">
+
+  <button onclick="addJob()">Save Job</button>
+</section>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+<main class="page analysis hidden" id="analysis">
+  <section>
+
+  <h3>Staff Comparison</h3>
+
+  <canvas id="staffChart"></canvas>
+
+</section>
+
+
+
+<section>
+
+  <h3>Monthly Revenue</h3>
+
+  <canvas id="monthlyChart"></canvas>
+
+</section>
+
+
+
+<section>
+
+  <h3>Daily Job Trend</h3>
+
+  <canvas id="dailyChart"></canvas>
+
+</section>
+
+
+
+<section>
+
+  <h3>Job Status Overview</h3>
+
+  <canvas id="statusChart"></canvas>
+
+</section>
+
+
+<section>
+
+  <h3>Spare Usage Analytics</h3>
+
+  <canvas id="spareChart"></canvas>
+
+</section>
+</main>
+
+
+
+
+<div class="bottom-nav" id="bottomNav">
+  <span class="home active" data-link="/">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  </svg>
+  </span>
   
-  <main>
-    <div class="container">
-    <label class="buy-txt">Buy now</label>
-    <div class="items-container">
-      <div class="item-card">
-        <div class="item-img-circle">
-          <img src="https://d2j6dbq0eux0bg.cloudfront.net/images/96306263/4018985376.jpg" alt="">
-        </div>
-        <div class="item-text">
-          <label>iPhone 11 pro max</label>
-        </div>
-      </div>
-      
-
-<div class="item-card">
-  <div class="item-img-circle">
-    <img src="https://www.digitaltrends.com/wp-content/uploads/2022/09/iPhone-14-Pro-Back-Purple-Hand.jpg?fit=382%2C255&p=1" alt="">
-  </div>
-  <a href="https://devsaheerhost.github.io/smartphone_doctor/iPhone">
-  <div class="item-text">
-    <label>iPhone 14 pro max</label>
-    <p>$1700.00</p>
-  </div>
-  </a>
+  <span class="analysis" data-link="analysis">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+  </svg>
+  </span>
+  
+  <span class="create" data-link="create">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+</svg>
+  </span>
+  
+  <span class="settings" data-link="settings">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+  </span>
 </div>
 
-<div class="item-card">
-  <div class="item-img-circle">
-    <img src="https://d2j6dbq0eux0bg.cloudfront.net/images/96306263/4018985376.jpg" alt="">
-  </div>
-  <div class="item-text">
-    <label>iPhone 12 pro</label>
-    <p>1500.00<p>
-  </div>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 
-    </div>
-      
-    </div>
-  </main>
-  <footer>
-    About us
-  </footer>
-  <script src="main.js"></script>
+
+
+
+
+<script type="module" src="app.js"></script>
 </body>
 </html>
