@@ -111,10 +111,10 @@ async function generateSN(){
 
   const snap = await get(ref(db,`shop-service/${shopname}/jobs`));
 
-  if(!snap.exists()) return "SN1001";
+  if(!snap.exists()) return "1001";
 
   const count = Object.keys(snap.val()).length + 1001;
-  return "SN"+count;
+  return count;
 }
 
 
