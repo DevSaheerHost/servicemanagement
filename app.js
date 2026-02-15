@@ -81,6 +81,8 @@ function formatLocal(date){
   return `${y}-${m}-${d}`;
 }
 
+
+
 const now = new Date();
 
 fromDate.value = formatLocal(
@@ -88,6 +90,13 @@ fromDate.value = formatLocal(
 );
 
 toDate.value = formatLocal(now);
+
+
+
+
+
+
+
 
 
 
@@ -212,7 +221,11 @@ function populateStaffFilter(){
 function applyFilters(){
 
   const from = new Date(fromDate.value).getTime() || 0;
-  const to = new Date(toDate.value).getTime() || Infinity;
+  //const to = new Date(toDate.value).getTime() || Infinity;
+  const to =
+  new Date(toDate.value).getTime()
+  + 86400000 - 1
+  || Infinity;
   const staff = staffFilter.value;
   const search = searchInput.value.toLowerCase();
 
@@ -226,7 +239,6 @@ function applyFilters(){
 
   Object.entries(allJobs)
   .forEach(([sn,job])=>{
-
     if(job.date < from || job.date > to) return;
     if(staff !== "all" && job.staff !== staff) return;
 
