@@ -1054,7 +1054,48 @@ window.updateStatus =
 } 
 
 
+function formatTS(ms){
 
+  const d = new Date(ms);
+
+  const day   = String(d.getDate()).padStart(2,"0");
+  const month = String(d.getMonth()+1).padStart(2,"0");
+  const year  = d.getFullYear();
+
+  let hours = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2,"0");
+
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12 || 12;
+  hours = String(hours).padStart(2,"0");
+
+  return `${hours}:${minutes} ${ampm} - ${day}/${month}/${year}`;
+}
+
+
+function loadStaffList(){
+const staffListEl = document.querySelector("#staffList")
+  onValue(
+    ref(db,`shop-service/${shopname}/staff`),
+    snap=>{
+
+      const allStaffs = snap.val() || {};
+      staffListEl.innerHTML=''
+
+      Object.entries(allStaffs).forEach(s=>{
+        staffListEl.innerHTML += `
+         <div class="list-item">
+        <p class="staff-name">${s[0]}</p>
+        <p class='date'>${formatTS(s[1].lastLogin)}</p>
+      </div>`
+      })
+
+    }
+  );
+
+}
+loadStaffList();
 
 
 

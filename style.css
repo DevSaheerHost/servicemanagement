@@ -160,6 +160,36 @@ section{
 
 
 
+main.settings-page {
+  padding: 1rem;
+}
+.settings-page h3{
+  margin: 0.5rem;
+}
+.settings-page .list{
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.5rem;
+
+}
+
+.settings-page .list-item{
+  border: 1px solid #E6E6E6;
+  background: #f5f6fa;
+  padding: 0.5rem;
+border-radius: 8px;
+}
+.settings-page .list-item p{
+  margin: 0;
+  color: #444;
+}
+.settings-page .list-item p.date{
+  font-size: 13px;
+  color: #A6A6A6;
+  font-weight: 600;
+}
+
+
 
 .hidden{
   display: none;
