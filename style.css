@@ -190,6 +190,19 @@ border-radius: 8px;
 }
 
 
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header button{
+  background: #fff;
+  color: #000;
+  text-wrap: nowrap;
+  border-radius: 7px;
+  font-weight: 600;
+}
 
 .hidden{
   display: none;

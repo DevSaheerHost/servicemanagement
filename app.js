@@ -24,7 +24,11 @@ let shopname =
 
 const filteredJobs = {};
 
-console.log(currentStaff)
+document.querySelector('button.logout').onclick=()=>{
+localStorage.clear()
+location.reload(true)
+}
+//console.log(currentStaff)
 
 
 
