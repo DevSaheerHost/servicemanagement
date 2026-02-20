@@ -42,7 +42,8 @@ import {
   set, 
   get, 
   onValue ,
-  update
+  update,
+  push
 } 
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -1188,3 +1189,94 @@ window.addEventListener("load", router);
    location.replace(`/#${link}`)
   }
 });
+
+
+
+
+/* ============================ GET DEVICE ======================*/
+
+function getDeviceInfo() {
+  return {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    language: navigator.language,
+    screen: {
+      width: screen.width,
+      height: screen.height
+    },
+    viewport: {
+      width: window.innerWidth,
+      height: window.innerHeight
+    },
+    online: navigator.onLine,
+    timestamp: new Date().toISOString()
+  };
+}
+
+
+
+/* ========= format error =========*/
+function formatError(error) {
+  return {
+    message: error?.message || "Unknown error",
+    stack: error?.stack || "No stack trace",
+    name: error?.name || "Error",
+  };
+}
+
+
+
+/* =========== send to fb db  ==========*/
+
+
+async function logErrorToFirebase(error, extra = {}) {
+  try {
+    const errorPath= `app-errors/${shopname || 'invalidShop'}`
+    const errorRef = ref(db, errorPath);
+
+    const payload = {
+      error: formatError(error),
+      device: getDeviceInfo(),
+      extra,
+      currentStaff,
+    };
+
+    await push(errorRef, payload);
+
+  } catch (e) {
+    console.error("Failed to log error:", e);
+  }
+}
+
+
+
+/* ============ CACH ALL GLOBAL ERRORS ============== */
+window.addEventListener("error", function (event) {
+  logErrorToFirebase(event.error || event.message, {
+    type: "UNCAUGHT_ERROR",
+    file: event.filename,
+    line: event.lineno,
+    column: event.colno
+  });
+});
+
+
+/*========== UNHANDLED PROMISES =========== */
+window.addEventListener("unhandledrejection", function (event) {
+  logErrorToFirebase(event.reason, {
+    type: "UNHANDLED_PROMISE"
+  });
+});
+
+
+
+
+/* ========= Fake error ========*/
+// try {
+//   riskyFunction();
+// } catch (err) {
+//   logErrorToFirebase(err, {
+//     function: "riskyFunction",
+//     customNote: "While creating job"
+//   });
+// }
