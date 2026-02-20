@@ -18,9 +18,9 @@ const bottomNavs = document.querySelectorAll('#bottomNav span')
 const staffTable =
   document.getElementById("staffTable");
 let currentStaff =
-  localStorage.getItem("staff") || '';
+  localStorage.getItem("staff");
 let shopname =
-  localStorage.getItem("shopname") || '';
+  localStorage.getItem("shopname");
 
 const filteredJobs = {};
 
@@ -105,20 +105,25 @@ toDate.value = formatLocal(now);
 
 
 
-if (!currentStaff || currentStaff === '' || currentStaff=='undefined' || !shopname || shopname==='' || shopname=='undefined') {
-  let name = prompt("Please enter your name:")?.trim().toLowerCase();
-  let shop = prompt("Enter shop name")?.trim().toLowerCase()
-if (name !== null && name !== "" && shop !== null && shop!=='') {
-  localStorage.setItem("staff", name);
-  localStorage.setItem("shopname", shop);
-    staffLogin(name, shop)
+if (!currentStaff || !shopname) {
+
+  const name = prompt("Please enter your name:")?.trim().toLowerCase();
+  const shop = prompt("Enter shop name:")?.trim().toLowerCase();
+
+  if (name && shop) {
+    localStorage.setItem("staff", name);
+    localStorage.setItem("shopname", shop);
+    staffLogin(name, shop);
+  } else {
+    alert("Name and shop are required.");
+    location.reload()
+  }
+
 } else {
-    alert("You didn't enter a name.");
+  logOpenInfoToFbDb()
 }
 
-}
-
-document.querySelector('#shopNameTitle').textContent=`${shopname.toUpperCase()} Service Management`
+document.querySelector('#shopNameTitle').textContent=`${shopname?.toUpperCase()} Service Management`
 
 // 📌 Generate Serial
 async function generateSN(){
@@ -1280,3 +1285,33 @@ window.addEventListener("unhandledrejection", function (event) {
 //     customNote: "While creating job"
 //   });
 // }
+
+
+
+
+/* ========= To log app opening times to db ======== */
+
+async function logOpenInfoToFbDb() {
+  try {
+
+    const now = new Date();
+
+    const formattedDate = `${String(now.getDate()).padStart(2,'0')}-${String(now.getMonth()+1).padStart(2,'0')}-${now.getFullYear()}`;
+
+    const appOpenPath = `app-opened/${shopname || 'invalidShop'}/${formattedDate}`;
+
+    const openPathRef = ref(db, appOpenPath);
+
+    const payload = {
+      device: getDeviceInfo(),
+      currentStaff,
+      time: now.toISOString(),
+      timestamp: Date.now()
+    };
+
+    await push(openPathRef, payload);
+
+  } catch (e) {
+    console.error("Failed to log :", e);
+  }
+}
