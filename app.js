@@ -248,6 +248,7 @@ function applyFilters(){
   const filteredJobs = {};   // ⚠️ REQUIRED
 
   Object.entries(allJobs)
+  .sort((a, b) => b[1].date - a[1].date) // latest first
   .forEach(([sn,job])=>{
     if(job.date < from || job.date > to) return;
     if(staff !== "all" && job.staff !== staff) return;
