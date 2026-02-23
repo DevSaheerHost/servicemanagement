@@ -265,9 +265,10 @@ header button{
 }
 
 
-p.promotion{
+p.helper-link{
   color: #42445A;
   font-size: 13px;
+  margin-left: 1rem;
 }
 .hidden{
   display: none;
