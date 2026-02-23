@@ -190,10 +190,22 @@ main.settings-page {
 
 .settings-page .list-item{
   border: 1px solid #E6E6E6;
-  background: #f5f6fa;
+  background: #fff;
   padding: 0.5rem;
 border-radius: 8px;
 width: 100%;
+}
+.settings-page .list-item.same{
+  background: #f5f6fa;
+}
+.settings-page .list-item.same p{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.settings-page .list-item p span{
+  font-weight: 600;
+  color: #0A8CFF;
 }
 .settings-page .list-item p{
   margin: 0;

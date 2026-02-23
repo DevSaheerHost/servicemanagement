@@ -963,7 +963,7 @@ spare = spare
   );
 
   counts.push(data.count);
-    //counts.push(data.cost);
+   // counts.push(data.cost);
 
 });
 
@@ -1094,9 +1094,10 @@ const staffListEl = document.querySelector("#staffList")
       staffListEl.innerHTML=''
 
       Object.entries(allStaffs).forEach(s=>{
+        const sameStaff = s[0]==currentStaff
         staffListEl.innerHTML += `
-         <div class="list-item">
-        <p class="staff-name">${s[0]}</p>
+         <div class="list-item ${sameStaff?'same':''}">
+        <p class="staff-name">${sameStaff? s[0] + '<span>YOU</span>' : s[0]}</p>
         <p class='date'>${formatTS(s[1].lastLogin)}</p>
       </div>`
       })
