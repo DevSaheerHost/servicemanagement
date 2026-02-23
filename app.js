@@ -1179,7 +1179,10 @@ function router() {
 ========================= */
 
 window.addEventListener("hashchange", router);
-window.addEventListener("load", router);
+window.addEventListener("load", ()=>{
+  router()
+  document.querySelector('#bottomNav').style.display='flex'
+});
 
 // bottom nav switch function 
 

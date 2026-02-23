@@ -161,17 +161,21 @@ section{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  animation: widthInc 1s ease;
+  animation: widthInc 0.5s ease;
+  opacity: 1;
+  display: none;
 }
 @keyframes widthInc{
   0%{
     width: 50%;
+    opacity: 0.7;
   }
   20%{
     width: 45%;
   }
   80%{
     width: 85%;
+    opacity: 1;
   }
 }
 
