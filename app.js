@@ -384,6 +384,17 @@ searchInput.oninput = applyFilters;
 
 
 
+const CURRENTVERSION = "1.1";
+const VERSIONKEY = "app_version";
+
+if (localStorage.getItem(VERSIONKEY) !== CURRENTVERSION) {
+
+  localStorage.clear();
+
+  localStorage.setItem(VERSIONKEY, CURRENTVERSION);
+
+  location.reload();
+}
 
 
 async function staffLogin(name, shop, number){
