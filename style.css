@@ -8,6 +8,10 @@ button{
   border-radius: 7px;
   font-weight: 600;
 }
+
+button:disabled{
+  opacity: 0.9;
+}
 input, select{
   border-radius: 7px;
   border: 1px solid #42445A;

@@ -3,6 +3,13 @@
 let allJobs = {};
 
 // DOM refs
+
+const $=s=>document.querySelector(s)
+const shopnameInput = $('#shopname')
+const usernameInput = $('#username')
+const phoneInput = $('#phone')
+const loginbtn = $('#loginbtn')
+
 const jobTable = document.getElementById("jobTable");
 const staffFilter = document.getElementById("staffFilter");
 const fromDate = document.getElementById("fromDate");
@@ -46,6 +53,7 @@ import {
   push
 } 
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
 
 
 // 🔧 Config
@@ -107,23 +115,41 @@ toDate.value = formatLocal(now);
 
 if (!currentStaff || !shopname) {
 
-  const name = prompt("Please enter your name:")?.trim().toLowerCase();
-  const shop = prompt("Enter shop name:")?.trim().toLowerCase();
+  // const name = prompt("Please enter your name:")?.trim().toLowerCase();
+  // const shop = prompt("Enter shop name:")?.trim().toLowerCase();
+  location.hash='auth'
 
-  if (name && shop) {
-    localStorage.setItem("staff", name);
-    localStorage.setItem("shopname", shop);
-    staffLogin(name, shop);
-  } else {
-    alert("Name and shop are required.");
-    location.reload()
+  // if (name && shop) {
+  //   localStorage.setItem("staff", name);
+  //   localStorage.setItem("shopname", shop);
+  //   staffLogin(name, shop);
+  // } else {
+  //   alert("Name and shop are required.");
+  //   location.reload()
+  // }
+
+loginbtn.onclick=()=>{
+  const name = usernameInput.value.trim()
+  const shopname = shopnameInput.value.trim().toLowerCase()
+  const number = phoneInput.value.trim()
+  if (name && shopname && number && number.length === 10) {
+    loginbtn.disabled=true
+    loginbtn.textContent='Please wait...'
+    staffLogin(name, shopname, number)
+  }else{
+    alert('please check all inputs')
   }
+}
+
+
 
 } else {
   logOpenInfoToFbDb()
+  loadJobs();
+  document.querySelector('#shopNameTitle').textContent=`${shopname?.toUpperCase() || ''} Service Management`
 }
 
-document.querySelector('#shopNameTitle').textContent=`${shopname?.toUpperCase()} Service Management`
+
 
 // 📌 Generate Serial
 async function generateSN(){
@@ -199,7 +225,8 @@ function loadJobs(){
   );
 
 }
-loadJobs();
+
+//loadJobs();
 
 
 
@@ -229,7 +256,7 @@ function populateStaffFilter(){
 
 
 function applyFilters(){
-
+  
   const from = new Date(fromDate.value).getTime() || 0;
   //const to = new Date(toDate.value).getTime() || Infinity;
   const to =
@@ -345,60 +372,99 @@ searchInput.oninput = applyFilters;
 
 
 
-async function staffLogin(name, shop){
 
-  //const name = staffNameInput.value.trim();
-  
 
-  if(!name){
-    alert("Enter staff name");
+
+
+
+
+
+
+
+
+
+
+
+
+async function staffLogin(name, shop, number){
+
+  name = name?.trim().toLowerCase();
+  number = number?.trim();
+
+  if(!name || !number){
+    alert("Enter valid name and number");
     return;
   }
 
-  const staffRef = ref(
-    db,
-    `shop-service/${shop}/staff/`+name
-  );
-
+  const staffRef = ref(db, `shop-service/${shop}/staff/${name}`);
   const snap = await get(staffRef);
+    loginbtn.textContent='loading...'
+  const now = Date.now();
 
-
-  // 👤 If staff exists
   if(snap.exists()){
+    
+  loginbtn.textContent = 'Staff exist'
+    const staffData = snap.val();
 
+    // 🔐 If number already exists → validate
+    if(staffData.number){
+  loginbtn.textContent = 'Number already available'
+
+      if(staffData.number !== number){
+        alert("Invalid number. Access denied.");
+        loginbtn.textContent = 'LogIn';
+        loginbtn.disabled=false;
+
+        return;
+      }
+
+    } 
+    // 🆕 Old staff (no number) → set number now
+    else {
+  loginbtn.textContent = 'number not exist'
+
+      await update(staffRef,{
+        number: number
+      });
+
+      console.log("Number added to old staff");
+  loginbtn.textContent = 'Number added'
+
+    }
+
+    // Update login time
     await update(staffRef,{
-      lastLogin: Date.now()
+      lastLogin: now
     });
 
+  loginbtn.textContent = 'login success'
+
     console.log("Staff logged in");
-location.reload()
+
   }
 
-  // 🆕 New staff
   else{
+  loginbtn.textContent = 'creating...'
 
     await set(staffRef,{
       name,
-      createdAt: Date.now(),
-      lastLogin: Date.now(),
+      number,
+      createdAt: now,
+      lastLogin: now,
       totalJobs: 0
     });
+  loginbtn.textContent = 'Staff Created success'
 
     console.log("New staff created");
-    location.reload()
 
   }
 
+  localStorage.setItem("staff", name);
+  localStorage.setItem("shopname", shop);
 
-  // Save session
   currentStaff = name;
-  localStorage.setItem(
-    "staff",
-    name
-  );
-
+location.reload()
   enterApp();
-
 }
 window.staffLogin = staffLogin;
 
@@ -1126,7 +1192,8 @@ const routes = {
   "/": "home",
   "analysis": "analysis",
   "settings": "settings",
-  "create": "create"
+  "create": "create",
+  'auth': 'auth'
 };
 //location.hash='#/create'
 
@@ -1319,4 +1386,10 @@ async function logOpenInfoToFbDb() {
   } catch (e) {
     console.error("Failed to log :", e);
   }
+}
+
+
+
+if (!currentStaff || !shopname) {
+  location.hash = 'auth'
 }
