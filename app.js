@@ -127,6 +127,7 @@ if (!currentStaff || !shopname) {
   //   alert("Name and shop are required.");
   //   location.reload()
   // }
+  $('#bottomNav').remove()
 
 loginbtn.onclick=()=>{
   const name = usernameInput.value.trim()
