@@ -1165,6 +1165,8 @@ const staffListEl = document.querySelector("#staffList")
         staffListEl.innerHTML += `
          <div class="list-item ${sameStaff?'same':''}">
         <p class="staff-name">${sameStaff? s[0] + '<span>YOU</span>' : s[0]}</p>
+        ${s[1].number?`<p class='staffNumber'>${s[1].number}</p>
+`:''}
         <p class='date'>${formatTS(s[1].lastLogin)}</p>
       </div>`
       })

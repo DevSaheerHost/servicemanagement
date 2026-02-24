@@ -10,7 +10,7 @@ button{
 }
 
 button:disabled{
-  opacity: 0.9;
+  opacity: 0.5;
 }
 input, select{
   border-radius: 7px;
@@ -252,6 +252,11 @@ width: 100%;
   color: #A6A6A6;
   font-weight: 600;
 }
+.settings-page .list-item p.staffNumber {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
 
 
 header {
@@ -274,6 +279,8 @@ p.helper-link{
   font-size: 13px;
   margin-left: 1rem;
 }
+
+
 .hidden{
   display: none;
 }
