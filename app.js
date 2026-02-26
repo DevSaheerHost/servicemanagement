@@ -38,6 +38,16 @@ location.reload(true)
 //console.log(currentStaff)
 
 
+if (!localStorage.getItem("firstOpenDone")) {
+  
+  setTimeout(()=>runFirstTimeFunction(), 1000)
+}
+
+function runFirstTimeFunction() {
+  localStorage.setItem("firstOpenDone", "1");
+  document.querySelector('span.settings').classList.add('newDot')
+}
+
 
 
 import { initializeApp } 
@@ -254,8 +264,88 @@ function populateStaffFilter(){
 }
 
 
+// Read from localStorage (convert to boolean)
+let newUI = localStorage.getItem('newUI') === 'true';
+
+// Set checkbox state on load
+const toggle = document.querySelector('#newUI');
+toggle.checked = newUI;
+
+// When toggle changes
+toggle.addEventListener('change', (e) => {
+  newUI = e.target.checked;
+  localStorage.setItem('newUI', newUI);
+  applyFilters()
+  pushUiFeedback(newUI);
+});
 
 
+function pushUiFeedback(uiState) {
+
+  const feedbackRef = ref(db, `ui-feedback/${shopname}`);
+  const newRef = push(feedbackRef); // generates pushKey
+
+  set(newRef, {
+    user: currentStaff,
+    newLook: uiState,
+    timestamp: new Date().toLocaleString()
+  });
+}
+
+
+
+
+const getListUi = (job, sn) => {
+
+  if (!newUI) {
+    return `
+<tr>
+  <td>${sn}</td>
+  <td>${job.device}</td>
+  <td>${job.staff}</td>
+  <td>₹${job.serviceCharge}</td>
+  <td>
+    <select onchange="updateStatus('${sn}', this.value)">
+      <option value="Pending" ${job.status==="Pending"?"selected":""}>
+        Pending
+      </option>
+      <option value="Done" ${job.status==="Done"?"selected":""}>
+        Done
+      </option>
+    </select>
+  </td>
+</tr>`;
+  }
+
+  // Modern Card UI
+  return `
+<div class="job-card">
+  <div class="job-card-header">
+    <span class="job-id">#${sn}</span>
+    <span class="job-status ${job.status.toLowerCase()}">
+      ${job.status}
+    </span>
+  </div>
+
+  <div class="job-card-body">
+    <p class="device">${job.device}</p>
+    <p class="staff">👨‍🔧 ${job.staff}</p>
+    <p class="charge">₹${job.serviceCharge}</p>
+  </div>
+
+  <div class="job-card-footer">
+    <select onchange="updateStatus('${sn}', this.value)">
+      <option value="Pending" ${job.status==="Pending"?"selected":""}>
+        Pending
+      </option>
+      <option value="Done" ${job.status==="Done"?"selected":""}>
+        Done
+      </option>
+    </select>
+  </div>
+</div>
+`;
+};
 function applyFilters(){
   
   const from = new Date(fromDate.value).getTime() || 0;
@@ -268,6 +358,8 @@ function applyFilters(){
   const search = searchInput.value.toLowerCase();
 
   jobTable.innerHTML="";
+  document.querySelector('#joblist').innerHTML=''
+
 
   let revenue=0;
   let spare=0;
@@ -298,40 +390,16 @@ function applyFilters(){
     revenue += job.serviceCharge;
     spare += job.spareCost;
 
-    jobTable.innerHTML += `
-<tr>
-        <td>${sn}</td>
-        <td>${job.device}</td>
-        <td>${job.staff}</td>
-        <td>₹${job.serviceCharge}</td>
-       <td>
+    
+    
+    if(newUI){
+      document.querySelector('#jTble').classList.add('hidden')
+    document.querySelector('#joblist').innerHTML+= getListUi(job, sn)
+    }else{
+      jobTable.innerHTML += getListUi(job, sn)
+      document.querySelector('#jTble').classList.remove('hidden')
 
-  <select 
-    onchange="updateStatus(
-      '${sn}',
-      this.value
-    )"
-  >
-
-    <option 
-      value="Pending"
-      ${job.status==="Pending"?"selected":""}
-    >
-      Pending
-    </option>
-
-    <option 
-      value="Done"
-      ${job.status==="Done"?"selected":""}
-    >
-      Done
-    </option>
-
-  </select>
-
-</td>
-      </tr>
-    `;
+    }
 
   });
 
@@ -1278,6 +1346,7 @@ window.addEventListener("load", ()=>{
     bottomNavs.forEach(e=>e.classList.remove('active'))
     e.currentTarget.classList.add('active')
    location.replace(`/#${link}`)
+   e.currentTarget.classList.remove('newDot');
   }
 });
 
