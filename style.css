@@ -77,6 +77,7 @@ input{
   margin:10px 0;
   padding:10px;
 }
+select{padding: 10px !important;}
 
 button{
   padding:10px 20px;
@@ -292,6 +293,15 @@ p.helper-link{
   margin-left: 1rem;
 }
 
+
+
+
+.filters .flex{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+}
 
 .hidden{
   display: none;
