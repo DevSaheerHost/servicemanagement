@@ -90,11 +90,23 @@ table{
   background:#fff;
   margin:15px;
   border-collapse:collapse;
+  border-radius: 10px;
+  animation: fadeUp 0.6s ease;
+  opacity: 1;
+  transition: all 0.6s;
+}
+@keyframes fadeUp{
+  from{
+    opacity: 0;
+  }
 }
 
 th,td{
   padding:10px;
   border-bottom:1px solid #ddd;
+  animation: fadeUp 0.6s ease;
+  opacity: 1;
+  transition: all 0.6s;
 }
 
 
